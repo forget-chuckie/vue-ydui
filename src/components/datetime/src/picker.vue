@@ -3,14 +3,14 @@
         <div class="yd-datetime-mask" v-show="show" @click.stop="close"></div>
         <div class="yd-datetime" :class="show ? 'yd-datetime-active' : ''">
             <div class="yd-datetime-head">
-                <a href="javascript:;" @click.stop="close">取消</a>
-                <a href="javascript:;" @click.stop="setValue">确定</a>
+                <a href="javascript:;" @click.stop="close">{{cancelText}}</a>
+                <a href="javascript:;" @click.stop="setValue">{{confirmText}}</a>
             </div>
             <div class="yd-datetime-content">
-                <div class="yd-datetime-item" v-for="column in columns">
+                <div class="yd-datetime-item" v-for="column, key in columns" :key="key">
                     <div class="yd-datetime-item-box" :ref="'Component_' + column">
                         <div class="yd-datetime-item-content" :ref="'Content_' + column">
-                            <span v-for="item in items[column]" :data-value="item.value" v-html="item.name"></span>
+                            <span v-for="item, key in items[column]" :data-value="item.value" v-html="item.name" :key="key"></span>
                         </div>
                     </div>
                 </div>
@@ -35,6 +35,8 @@
                 columns: [],
                 scroller: [],
                 type: '',
+                cancelText: '',
+                confirmText: '',
                 items: {
                     Year: [],
                     Month: [],

@@ -23,6 +23,10 @@
                 validator(val) {
                     return /^\d*$/.test(val);
                 }
+            },
+            closeText: {
+                type: String,
+                default: '关闭'
             }
         },
         watch: {
@@ -59,16 +63,17 @@
                 const boxComponent = Vue.extend(Box);
                 const mes = this.$children.filter(item => item.$options.name === 'yd-lightbox-txt');
 
-                index += 1;
                 this.box = new boxComponent({
                     el: document.createElement('div'),
                     data: {
                         index: index,
                         currentIndex: index,
                         imgItems: this.imgItems,
-                        txtHTML: mes[0] && mes[0].$el ? mes[0].$el.innerHTML : ''
+                        txtHTML: mes[0] && mes[0].$el ? mes[0].$el.innerHTML : '',
+                        closeText: this.closeText
                     }
                 });
+
                 document.body.appendChild(this.box.$el);
             }
         },

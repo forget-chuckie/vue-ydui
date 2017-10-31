@@ -6,7 +6,8 @@
                 <p class="yd-cityselect-title" @touchstart.stop.prevent="">{{title}}</p>
                 <div v-show="ready" class="yd-cityselect-nav">
                     <a href="javascript:;"
-                       v-for="index in columnNum"
+                       :key="key"
+                       v-for="index, key in columnNum"
                        v-show="!!nav['txt' + index]"
                        @click.stop="navEvent(index)"
                        :class="index == navIndex ? 'yd-cityselect-nav-active' : ''"
@@ -21,11 +22,12 @@
                 </svg>
             </div>
             <ul v-show="ready" class="yd-cityselect-content" :class="activeClasses">
-                <li class="yd-cityselect-item" v-for="index in columnNum" :ref="'itemBox' + index">
+                <li class="yd-cityselect-item" v-for="index, key in columnNum" :ref="'itemBox' + index" :key="key">
                     <template v-if="columns['columnItems' + index].length > 0">
                         <div class="yd-cityselect-item-box">
                             <a href="javascript:;"
-                               v-for="item in columns['columnItems' + index]"
+                               :key="key"
+                               v-for="item, key in columns['columnItems' + index]"
                                :class="currentClass(item.v, item.n, index)"
                                @click.stop="itemEvent(index, item.n, item.v, item.c)"
                             ><span>{{item.n}}</span></a>
@@ -50,7 +52,7 @@
                 show: this.value,
                 navIndex: 1,
                 nav: {
-                    txt1: '请选择',
+                    txt1: this.chooseTitle,
                     txt2: '',
                     txt3: ''
                 },
@@ -78,6 +80,10 @@
             title: {
                 type: String,
                 default: '所在地区'
+            },
+            chooseTitle: {
+                type: String,
+                default: '请选择'
             },
             value: {
                 type: Boolean,
@@ -122,7 +128,7 @@
 
                         if ((i - 1) === 0) {
                             this.navIndex = i;
-                            this.nav['txt' + i] = '请选择';
+                            this.nav['txt' + i] = this.chooseTitle;
                             this.$refs['itemBox' + i][0].scrollTop = 0;
                             this.backoffView(false);
                         } else {
@@ -153,18 +159,27 @@
                 this.nav['txt' + index] = name;
                 this.columns['columnItems' + (index + 1)] = children;
 
-                if (index > 1 && children && this.columnNum > 2) {
+                if (index > 1 && children && children.length > 0 && this.columnNum > 2) {
                     this.forwardView(true);
                 }
 
                 this.clearNavTxt(index);
 
                 if (index === this.columnNum || children.length <= 0) {
+                    if (index !== this.columnNum) {
+                        for (let i = this.columnNum; i >= 0; i--) {
+                            if (i > index) {
+                                this.active['itemValue' + i] = '';
+                                this.active['itemName' + i] = '';
+                                this.nav['txt' + i] = '';
+                            }
+                        }
+                    }
                     this.navIndex = index;
                     this.returnValue();
                 } else {
                     this.navIndex = index + 1;
-                    this.nav['txt' + (index + 1)] = '请选择';
+                    this.nav['txt' + (index + 1)] = this.chooseTitle;
                 }
             },
             currentClass(v, n, index) {

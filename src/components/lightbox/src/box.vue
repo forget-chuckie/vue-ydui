@@ -2,12 +2,12 @@
     <div>
         <div class="yd-lightbox">
             <div class="yd-lightbox-head" :class="show ? '' : 'yd-lightbox-up-hide'">
-                <span>{{currentIndex}} / {{imgItems.length}}</span>
-                <a href="javascript:;" @click="close">关闭</a>
+                <span>{{currentIndex + 1}} / {{imgItems.length}}</span>
+                <a href="javascript:;" @click="close">{{closeText}}</a>
             </div>
             <div class="yd-lightbox-img" @click="show = !show">
-                <slider autoplay="0" :showPagination="false" :callback="changeIndex" :index="index">
-                    <slider-item v-for="item in imgItems">
+                <slider autoplay="0" :show-pagination="false" :loop="false" :callback="changeIndex" :index="index">
+                    <slider-item v-for="item, key in imgItems" :key="key">
                         <img :src="getImgSrc(item.$el)">
                     </slider-item>
                 </slider>
@@ -35,11 +35,12 @@
         },
         data() {
             return {
-                currentIndex: 1,
+                currentIndex: 0,
                 index: 1,
                 imgItems: [],
                 show: true,
-                txtHTML: ''
+                txtHTML: '',
+                closeText: ''
             }
         },
         methods: {

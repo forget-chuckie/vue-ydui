@@ -6,6 +6,7 @@
     import Vue from 'vue';
     import Utils from './utils';
     import PickerComponent from './picker.vue';
+    import {pageScroll} from '../../../utils/assist';
 
     export default {
         name: 'yd-datetime',
@@ -86,6 +87,14 @@
                 type: String,
                 default: '{value}分'
             },
+            cancelText: {
+                type: String,
+                default: '取消'
+            },
+            confirmText: {
+                type: String,
+                default: '确定'
+            },
             value: {
                 type: String,
                 validator(value) {
@@ -149,6 +158,7 @@
             this.render();
         },
         beforeDestroy() {
+            pageScroll.unlock();
             this.removeElement();
         }
     }
